@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "titanic<- read.csv(\"data/titanic3.csv\", sep=\";\", stringsAsFactors=FALSE)\n#str(titanic)\nif (dim(titanic)[1]> 1309) titanic <-titanic[1:1309,]\n\nnames(titanic)<-tolower(names(titanic))\n\ntitanic$survived<- as.factor(titanic$survived)\ntitanic$pclass<- as.factor(titanic$pclass)\ntitanic$age<- as.numeric(gsub(\",\",\".\",titanic$age))\ntitanic$fare<- as.numeric(gsub(\",\",\".\",titanic$fare))\n\n\ntitanic$age[is.na(titanic$age)] <- median(titanic$age,na.rm = TRUE)\ntitanic$fare[is.na(titanic$fare)] <-mean(titanic$fare,na.rm = TRUE)\ntitanic$embarked[which(titanic$embarked == '')]<-\"S\"\ntitanic$embarked<-factor(titanic$embarked)\n\n\n\n# Processing generics Titles\ntitanic$name = as.character(titanic$name)\ntitanic$title<-sapply(titanic$name, FUN=function(x){strsplit(x, split='[,.]')[[1]][2]})\ntitanic$title<-sub(' ', '', titanic$title)\ntitanic$title[titanic$title=='Mlle']<-'Miss'\ntitanic$title[titanic$title %in% c('Mme', 'Ms')]<-'Mrs'\ntitanic$title[titanic$title %in% c('Capt', 'Don', 'Major', 'Sir')]<-'Sir'\ntitanic$title[titanic$title %in% c('Dona', 'Lady', 'the Countess', 'Jonkheer')]<-'Lady'\ntitanic$title<-factor(titanic$title)\n\n# Computing family size\ntitanic$familysize <-titanic$sibsp+titanic$parch\n\n# Creating a family id\n\ntitanic$familyid<-as.factor(paste(sapply(titanic$name, FUN=function(x){strsplit(x, split='[,.]')[[1]][1]}),as.character(titanic$familysize), sep=\"_\"))\n\n\n# Creating a family id\n\ntitanic$familyname<-as.factor(sapply(titanic$name, FUN=function(x){strsplit(x, split='[,.]')[[1]][1]}))\n\n\n# Creating age categories\ntitanic$agecategory = cut(titanic$age, breaks=c(0,21,39,80),labels=c(\"Child\",\"Adult\",\"Senior\"))\n\n# Creating fare categories\ntitanic$farecategory = cut(titanic$age, breaks=c(0,10,20,30,40,513))\n\n\n\n\n\n",
+    "created" : 1477357723869.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "719567669",
+    "id" : "A9BF1B3A",
+    "lastKnownWriteTime" : 1477422505,
+    "last_content_update" : 1477422505842,
+    "path" : "D:/Developpement/R/MyTitanic/Apps/diamond/preprocess.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

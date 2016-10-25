@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "propsurvivor<-function(colname) {\n  t <- prop.table(table(titanic$survived,titanic[[colname]] ),2)\n}\n\nplotitanic <-function(X=\"age\",Y=\"pclass\",Col=\"sex\", facet_row=\"survived\",facet_col=\".\",jitter=F,smooth=F){\np <- ggplot(titanic, aes_string(x=\"age\", y=\"pclass\")) + geom_point()\n\nif (Col != 'None') \n  p <- p + aes_string(color=Col)\n\nfacets <- paste(facet_row, '~', facet_col)\nif (facets != '. ~ .')\n  p <- p + facet_grid(facets)\n\nif (jitter)\n  p <- p + geom_jitter()\nif (smooth)\n  p <- p + geom_smooth()\nreturn(p)\n}\n\n\ntrainmodel <- function (modeltype, params, ncv){\n  \n  set.seed(1960)\n  \n  #print(params)\n  # Training Models\n  \n  if (modeltype == \"lr\") {\n  # A) Logistic Regression\n  # set seed for reproductibility\n  \n\n  model.lr <- train(survived ~ pclass + sex + agecategory + farecategory, \n                    data = titanic, \n                    method=\"glm\", family=\"binomial\",\n                    trControl = trainControl(method = \"cv\", \n                                             number = ncv) )\n\n  #summary(model.lr)\n  #confusionMatrix(model.lr)\n  \n  return(model.lr)\n  }\n  \n  \n  if (modeltype == \"dt\") {\n  # B) Random forest algorithm\n  # set seed for reproductibility\n\n  \n  \n  if (nchar(params)<2){ params<-\"sex\"}\n  args<-list()\n  args$form <- as.formula(paste(\"survived ~ \", params))\n  args$data<-titanic\n  args$method<-\"rpart\"\n  args$cp<- 0.002\n  args$maxdepth<-12\n  \n  \n  model.dt <- do.call(\"train\",args)                \n  \n  \n  \n  return(model.dt)\n  }\n  if (modeltype == \"rf\") {\n  # C) Random forest algorithm\n  # set seed for reproductibility\n  \n  #model.rf <- train(survived ~ pclass + sex + agecategory + farecategory, data = titanic, method = \"rf\",\n                    \n    if (nchar(params)<2){ params<-\"sex\"}\n    args<-list()\n    args$form <- as.formula(paste(\"survived ~ \", params))\n    args$data<-titanic\n    args$method<-\"rf\"\n    args$trControl <- trainControl(method = \"cv\",number = ncv) \n  \n  \n    model.rf <- do.call(\"train\",args)  \n  \n  \n  return(model.rf)\n  } \n}\n\n\n\nretmodeldt <- function(modtype, params) {\n  \n  ret <-list()\n  \n # print(params)\n    \n    # computing the decision tree\n    model <- trainmodel(modtype, params, ncv =0)\n    ret$model<- model\n    ret$summary<- summary(model)\n    ret$plot <- fancyRpartPlot(model$finalModel)\n    \n    \n    return(ret) \n    \n    }\nretmodelrf <- function(modtype, params,ncv) {\n  \n  ret <-list()\n  \n  #print(params)\n  \n  # computing the random forrest\n  model <- trainmodel(modtype, params, ncv )\n  ret$model<- model\n  ret$summary<- summary(model)\n  ret$plot <- plot(model$finalModel)\n  ret$conf<- confusionMatrix(model)\n  \n  \n  return(ret) \n  \n} \n",
+    "created" : 1477398079435.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3248855917",
+    "id" : "4CCC7151",
+    "lastKnownWriteTime" : 1477420185,
+    "last_content_update" : 1477420185069,
+    "path" : "D:/Developpement/R/MyTitanic/Apps/MyTitanicApp/functions_server.R",
+    "project_path" : "functions_server.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

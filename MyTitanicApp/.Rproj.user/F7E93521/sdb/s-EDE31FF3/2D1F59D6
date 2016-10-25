@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# Load Libraries\n\npkgs<-c(\"shiny\",\n        \"randomForest\",\n        \"Rook\",\n        \"rpart\",\n        \"rattle\",\n        \"rpart.plot\",\n        \"RColorBrewer\",\n        \"ggplot2\",\n        \"gridExtra\",\n        \"dplyr\",\n        \"Amelia\",\n        \"caret\"\n        )\nif (!require(\"pacman\")) install.packages(\"pacman\"); library(pacman)\np_load(char=pkgs)\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1477388759423.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3258670067",
+    "id" : "2D1F59D6",
+    "lastKnownWriteTime" : 1477388794,
+    "last_content_update" : 1477388794264,
+    "path" : "D:/Developpement/R/MyTitanic/Apps/MyTitanicApp/init.r",
+    "project_path" : "init.r",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

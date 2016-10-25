@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "Johns Hopkins Developing Data Products Course Project - attbigdatagroup\n=======================================================================\n\nCourse Project Assignment Requirements:\n=======================================\n\nYour Shiny Application\n\n1.  Write a shiny application with associated supporting documentation. The documentation should be thought of as         whatever a user will need to get started using your application.\n2.  Deploy the application on Rstudio's shiny server\n3.  Share the application link by pasting it into the text box below\n4.  Share your server.R and ui.R code on github\n\nThe application must include the following:\n\n1.  Some form of input (widget: textbox, radio button, checkbox, ...)\n2.  Some operation on the ui input in sever.R\n3.  Some reactive output displayed as a result of server calculations\n4.  You must also include enough documentation so that a novice user could use your application.\n5.  The documentation should be at the Shiny website itself. Do not post to an external link.\n\nThe Shiny application in question is entirely up to you. However, if you're having trouble coming up with ideas, you could start from the simple prediction algorithm done in class and build a new algorithm on one of the R datasets packages. Please make the package simple for the end user, so that they don't need a lot of your prerequisite knowledge to evaluate your application. You should emphasize a simple project given the short time frame.  \n\n\nProject Description - About this Shiny App\n==========================================\n\nThis is a Shiny Application developed using the Kaggle's Titanic dataset that predicts the fate of the passengers aboard the RMS Titanic, which famously sank in the Atlantic ocean during its maiden voyage from the UK to New York City after colliding with an iceberg.\n\n\nAbout the Kaggle Titanic Challenge\n==============================\n\nPredict survival on the Titanic (with tutorials in Excel, Python, R, and an introduction to Random Forests)\n\nThe sinking of the RMS Titanic is one of the most infamous shipwrecks in history.  On April 15, 1912, during her maiden voyage, the Titanic sank after colliding with an iceberg, killing 1502 out of 2224 passengers and crew. This sensational tragedy shocked the international community and led to better safety regulations for ships.\n\nOne of the reasons that the shipwreck led to such loss of life was that there were not enough lifeboats for the passengers and crew. Although there was some element of luck involved in surviving the sinking, some groups of people were more likely to survive than others, such as women, children, and the upper-class.\n\nIn this challenge, we ask you to complete the analysis of what sorts of people were likely to survive. In particular, we ask you to apply the tools of machine learning to predict which passengers survived the tragedy. \n\n\nAdditional Info\n===============\n\n\nThese are the files produced for the Developing Data Products final project from Johns Hopkins University.\n\n1.  RStudio Shiny Server Web App: https://attbigdatagroup.shinyapps.io/Titanic-Shiny-Application/                                              \n    GitHub Repo: https://github.com/attbigdatagroup/Titanic-Shiny-Application\n\n\n2.  For more information about the Kaggle Titanic challenge visit:\n    https://www.kaggle.com/c/titanic-gettingStarted\n\n3.  For more inspiration about the Kaggle Titanic challenge visit Tevor's R tutorial here:\n    http://trevorstephens.com/post/72916401642/titanic-getting-started-with-r\n\n\n\n\n\n",
+    "created" : 1477425821429.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1647137067",
+    "id" : "42B8BDB5",
+    "lastKnownWriteTime" : 1469516286,
+    "last_content_update" : 1469516286,
+    "path" : "D:/Developpement/R/MyTitanic/Apps/Titanic-Shiny-Random Forest/README.md",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "markdown"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "tabPanelAbout<-function(){\n  tabPanel(\"About\",\n           HTML('\n                <p style=\"text-align:justify\"> \"This R Shiny web app allows the user to perform basic exploratory analysis and test some predictives models (decisiontree and random forrest).\n        The simulated data, one of many version you can find on the net, is not the one from Kaggle s Titanic challenge, but come from the site \n                http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.xls. It is inspired on Trevor Stephens R tutorial, which  you can find at\n                http://trevorstephens.com/post/72916401642/titanic-getting-started-with-r.Currently, features are very limited. \"</p>\n                \n                <p style=\"text-align:justify\"> According to Wikipedia :\"RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean in the early morning of 15 April 1912, \nafter colliding with an iceberg during her maiden voyage from Southampton to New York City. Of the 2,224 passengers and crew aboard, \n                more than 1,500 died in the sinking, making it one of the deadliest commercial peacetime maritime disasters in modern history.\" </p>'),\n           \n           HTML('\n                <div style=\"clear: left;\"><img src=\"http://img1.mxstatic.com/wallpapers/381dad49c6c4d19ec1d4503f44d60f5a_large.jpeg\" alt=\"\" style=\"float: left; margin-right:5px\" /></div>\n                '\n           \n          \n           ),\n           value=\"about\"\n           )\n}\n\n\n\n",
+    "created" : 1477418668711.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4208719737",
+    "id" : "9541AED5",
+    "lastKnownWriteTime" : 1477425198,
+    "last_content_update" : 1477425198489,
+    "path" : "D:/Developpement/R/MyTitanic/Apps/MyTitanicApp/functions_ui.R",
+    "project_path" : "functions_ui.R",
+    "properties" : {
+        "source_window_id" : "",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
