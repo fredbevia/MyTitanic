@@ -9,165 +9,153 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Introduction | A real Case
+## Introduction | A Sinking Case
 
-At my job, i'm incharge of deploying applications virtualization with the virtualization software Applidis, based on Microsoft TSE/RDP protocol. These virtualized apps are deployed on servers.
-One of my task is to monitor theses servers for their activities and the apps activities. So these plot is a firts attempt (a very simple prototype:-) to do that. From a csv file which contains the date and time of the use of applications by servers, i plotted, with plotly the min,max and mean duration of the sum of all apps usage, by Server and by date. 
-Further more, i trace two servers particularly:
 
-- SRVMV-COMMUN001
-- SRVMV-PDEP001.  
+
+This is a a presentation about a Shiny Application developed using the Kaggle's Titanic dataset which predicts the fate of the passengers aboard the RMS Titanic.The luxury steamship RMS Titanic met its catastrophic end in the North Atlantic, plunging two miles to the ocean floor after sideswiping an iceberg during its maiden voyage. Rather than the intended Port of New York, a deep-sea grave became the pride of the White Star Line’s final destination in the early hours of April 15, 1912. More than 1,500 people lost their lives in the disaster.
+
+So the data a bout the passengers of this ship are often used in introductory data analysis and as firt simple intro to the Kaggle machine learning competitions platform.
+
 
 ```{r, echo=F, warning=F, message=F}
-#load leaflet package for R
-library(plotly)
-#library(lubridate)
-library(chron)
-
-# reusable function for highlighting a particular Serveur or app
-layer_server <- function(plot, name) {
-  plot %>% filter(Server == name) %>% add_lines(name = name)
-}
-
-# reusable function for plotting overall average duration and min/max
-
-layer_stats <- function(plot) {
- 
-    plot %>%
-    add_lines(y = ~mean, name = "mean", color = I("Green")) %>%
-    add_ribbons(ymin = ~min, ymax = ~max, name = "Min and Max", color = I("black"))
-}
+library(dplyr)
+library(Amelia)
+library(caret)
+library(rattle)
+library(randomForest)
+library(rpart)
 
 
-Stats <- read.csv("Stats.csv", sep=";", stringsAsFactors=FALSE)
-Stats$Date <-as.POSIXct(Stats$DBegin, format = "%d/%m/%Y")
-Stats$DBegin <-as.POSIXct(Stats$DBegin, format = "%d/%m/%Y %H:%M")
-Stats$DEnd <-as.POSIXct(Stats$DEnd, format = "%d/%m/%Y %H:%M")
-Stats$Duration<-chron(times=Stats$Duration)
 
-Stats<- arrange(Stats,Server,Date,Apps)
-ts <- summarise(group_by(Stats,Server,Date),total=sum(Duration),min = min(Duration, na.rm = TRUE),mean = mean(Duration, na.rm = TRUE),max = max(Duration, na.rm = TRUE))
+propsurvivor<-function(colname) {t <- prop.table(table(titanic[[colname]], titanic$survived),1)}
 
+titanic<- read.csv("D:/Developpement/R/MyTitanic/titanic3.csv", sep=";", stringsAsFactors=FALSE)
+#str(titanic)
+if (dim(titanic)[1]> 1309) titanic <-titanic[1:1309,]
+
+titanic$survived<- as.factor(titanic$survived)
+
+
+titanic$age<- as.numeric(gsub(",",".",titanic$age))
+titanic$fare<- as.numeric(gsub(",",".",titanic$fare))
+
+# missmap(titanic, main = "Missingness Map for Titanic Datas")
+
+titanic$age[is.na(titanic$age)] <- median(titanic$age,na.rm = TRUE)
+titanic$fare[is.na(titanic$fare)] <-mean(titanic$fare,na.rm = TRUE)
+```
+
+
+
+## The Datas
+The Shiny App  uses Titanic data from the http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets website. 
+The variables available are :
+```{r  kable,echo=T, warning=F, message=F, fig.width=5, fig.height=5}
+names(titanic)
+
+```
+We can see there is intialy 14 varialbles
+The variable survived indicate if a person has survived or not and so it's the variable to predict
+With some feature engineering we added  some other variables in order to categorize or simplify
+The prediction this apps does are based principaly on Age, Sex, Fare Pclass, SibSp, Parch and Embarked variables. But the user can choose among these predictors. 
+
+
+
+
+## Predictions and Models
+
+After somme testing of differents algorithms, i decided to use two machine learning  algorithms
+to modelise:
+- Decision Tree
+- Random Forest
+Theses algorithms are classicals but provide a fair accuracy in predictions and good results.
+In order to produce better results, Cross Validation was used with the Random Forest model.By the way, the user in the App can control the number of cross validation tests.
+
+
+
+```{r multiplot, echo=F, warning=F, message=F}
+
+par(mfrow=c(2,2))
+titanic$agecategory = cut(titanic$age, breaks=c(0,21,39,80),labels=c("Child","Adult","Senior"))
+#aggregate(survived ~ agecategory + sex, data=titanic, FUN=function(x) {(sum(x)/length(x))*100})
+#mosaicplot(~ sex + agecategory + survived, data=titanic)
+
+
+# summary(titanic$fare)
+
+titanic$farecategory = cut(titanic$age, breaks=c(0,10,20,30,40,513))
+# aggregate(survived ~ farecategory + pclass + sex, data=titanic, FUN=function(x){(sum(x)/length(x))*100})
+#mosaicplot(~ sex + agecategory + survived, data=titanic)
+# Training Models
+# A) Logistic Regression
+# set seed for reproductibility
+set.seed(1960)
+ncv <- 5
+model.lr <- train(survived ~ pclass + sex + agecategory + farecategory, 
+                  data = titanic, 
+                  method="glm", family="binomial",
+                  trControl = trainControl(method = "cv", 
+                                           number = ncv) )
+
+#summary(model.lr)
+#confusionMatrix(model.lr)
 
 
 ```
 
 
+## Exemple
+As exemple, you can see with the Shiny App some results of the Decision Tree algorith (applied with   the caret package) like the one below 
+```{r  echo=F, warning=F, message=F}
 
-## Some Basics Stats about the File
+# B)Decision Tree algorithm
+# set seed for reproductibility
+set.seed(1960)
+#ncv <- 5
+model.dt <- train(survived ~ pclass + sex + agecategory + farecategory, 
+                  data = titanic, 
+                  method =  "rpart",cp=0.002,maxdepth=12
+)
+
+#summary(model.dt)
+fancyRpartPlot(model.dt$finalModel)
 
 
-```{r kable, echo=F, warning=F, message=F}
-library(knitr)
-# kable(summary(Stats))
-summary(Stats)
-```
-
-
-## Datas
-
-After some grouping and summarizing with DPLYR,
-the Datas:
-
-```{r , echo=F, warning=F, message=F}
-
-kable(head(ts))
 
 ```
+```{r  echo=F, warning=F, message=F, fig.width=3, fig.height=3}
+# C) Random forest algorithm
+# set seed for reproductibility
+set.seed(1960)
+ncv <- 5
+model.rf <- train(survived ~ pclass + sex + agecategory + farecategory, 
+               data = titanic, 
+               method = "rf",
+               trControl = trainControl(method = "cv", 
+                                        number = ncv) )
 
-## The Servers Activity
-
-```{r, echo=F, warning=F, message=F}
-allServers <- ts %>%
-  plot_ly(x = ~Date, y = ~total) %>%
-  add_lines(alpha = 0.5, name = "Applidis Servers", hoverinfo = "none")
-
-
-
-allServers %>%
-  add_fun(layer_stats)  %>%
-  add_fun(layer_server, "SRVMV-COMMUN001") %>%
-  add_fun(layer_server, "SRVMV-PDEP001")
-
+#summary(model.rf)
+#confusionMatrix(model.rf)
 
 ```
 
 ## Conclusion
 
-- With the interactive plot, we can see that SRVMV-COMMUN001 is globaly more  sougth than srvmv-pdep001
-- It's just a a beginning and i intend to produce a full automatic report not only for the servers activity but also for applications and users
+- On the basis of a first analysis i build a very basic Shiny App which presents some graphs and two models, the Decision Tree and The Random Forest with cross-validation algorithm 
+- The Apps Presents Differents Tabs, an With few clicks on the sidebar panel, you can: 
+-- plot some graphs about the relatives importances of attributes in the survival or death
+-- choose one algorithm and predict the fate of the passengers with about 85% of accuracy.
+- It's just a a beginning and i intend to produce a better App which can predict based on your age, sex and some other atributes if you would have survived the or died on the Titanic.
 
+- github repo for the app and the code:
+  https://github.com/fredbevia/MyTitanic
 
 
 #MERCI !
 (__Thank You in french__)
 
 
-
-
-## Appendix: the code | the functions
-
-
-```{r echo=T, eval=F, warning=F, message=F}
-
-
-#loading the libraies
-library(plotly)
-library(chron)
-
-# reusable function for highlighting a particular Serveur or app
-layer_server <- function(plot, name) {
-  plot %>% filter(Server == name) %>% add_lines(name = name)
-}
-
-# reusable function for plotting overall average duration and min/max
-
-layer_stats <- function(plot) {
- 
-    plot %>%
-    add_lines(y = ~mean, name = "mean", color = I("Green")) %>%
-    add_ribbons(ymin = ~min, ymax = ~max, 
-  name = "Min and Max", color = I("black"))
-}
-
-```
-## Appendix | The File pre-processing code
-
-
-```{r echo=T, eval=F, warning=F, message=F}
-Stats <- read.csv("Stats.csv", sep=";", stringsAsFactors=FALSE)
-
-Stats$Date <-as.POSIXct(Stats$DBegin, format = "%d/%m/%Y")
-
-Stats$DBegin <-as.POSIXct(Stats$DBegin, format = "%d/%m/%Y %H:%M")
-Stats$DEnd <-as.POSIXct(Stats$DEnd, format = "%d/%m/%Y %H:%M")
-Stats$Duration<-chron(times=Stats$Duration)
-
-Stats<- arrange(Stats,Server,Date,Apps)
-ts <- summarise(group_by(Stats,Server,Date),total=sum(Duration),min = min(Duration, na.rm = TRUE),mean = mean(Duration, na.rm = TRUE),max = max(Duration, na.rm = TRUE))
-
-summary(Stats)
-head(ts)
-
-```
-
-## Appendix | The Plot code
-
-
-```{r echo=T, eval=F, warning=F, message=F}
-#The Plot
-
-allServers <- ts %>%
-  plot_ly(x = ~Date, y = ~total) %>%
-  add_lines(alpha = 0.5, name = "Applidis Servers", hoverinfo = "none")
-
-allServers %>%
-  add_fun(layer_stats)  %>%
-  add_fun(layer_server, "SRVMV-COMMUN001") %>%
-  add_fun(layer_server, "SRVMV-PDEP001")
-
-
-```
 
 
 
